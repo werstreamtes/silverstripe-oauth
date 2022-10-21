@@ -2,27 +2,32 @@
 
 namespace oauth\model;
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * A redirection URL
  */
-class RedirectionURL extends \DataObject {
-	public static $db = array(
-		'Endpoint' => 'Varchar(1024)',
-	);
+class RedirectionURL extends DataObject
+{
+    private static $db = [
+        'Endpoint' => 'Varchar(1024)',
+    ];
 
-	public static $has_one = array(
-		'Client' => 'oauth\model\Client',
-	);
+    private static $has_one = [
+        'Client' => 'oauth\model\Client',
+    ];
 
-	public static $singular_name = 'OAuth Client Redirection URL';
+    private static $singular_name = 'OAuth Client Redirection URL';
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->removeByName('ClientID');
-		return $fields;
-	}
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->removeByName('ClientID');
+        return $fields;
+    }
 
-	public function getTitle() {
-		return $this->Endpoint;
-	}
+    public function getTitle()
+    {
+        return $this->Endpoint;
+    }
 }

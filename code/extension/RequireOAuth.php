@@ -1,5 +1,10 @@
 <?php
 
+namespace WSE\OAuth;
+
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Extension;
+
 /**
  * Extension class that can be attached to a controller to show that that controller requires OAuth
  *
@@ -12,68 +17,74 @@
  * allowing it to access the controller, pass the name of the scopes
  * as either an array or list of strings to the constructor.
  */
-class RequireOAuth extends Extension {
-	protected $scopes;
-	protected $checkOnInit = true;
+class RequireOAuth extends Extension
+{
+    protected $scopes;
+    protected $checkOnInit = true;
 
-	/**
-	 * Constructor. For use, see the class docblock.
-	 */
-	public function __construct($scopes=null) {
-		if($scopes && !is_array($scopes)) {
-			$scopes = func_get_args();
-		} elseif($scopes === false) {
-			$this->checkOnInit = false;
-		}
-		$this->scopes = $scopes;
+    /**
+     * Constructor. For use, see the class docblock.
+     */
+    public function __construct($scopes = null)
+    {
+        if ($scopes && !is_array($scopes)) {
+            $scopes = func_get_args();
+        } elseif ($scopes === false) {
+            $this->checkOnInit = false;
+        }
+        $this->scopes = $scopes;
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * If we've been asked to check on init, check for a valid request and log the member in.
-	 */
-	public function onBeforeInit() {
-		if($this->checkOnInit) {
-			try {
-				$token = $this->authTokenService->authRequest($this->owner->getRequest(), $this->scopes);
-				$token->Member()->login();
-			} catch (\SS_HTTPResponse_Exception $e) {
-				$this->owner->popCurrent();
-				throw $e;
-			}
-		}
-	}
+    /**
+     * If we've been asked to check on init, check for a valid request and log the member in.
+     */
+    public function onBeforeInit()
+    {
+        if ($this->checkOnInit) {
+            try {
+                $token = $this->authTokenService->authRequest($this->owner->getRequest(), $this->scopes);
+                $token->Member()->login();
+            } catch (HTTPResponse_Exception $e) {
+                $this->owner->popCurrent();
+                throw $e;
+            }
+        }
+    }
 
-	/**
-	 * Require that the OAuth request has the given scopes.
-	 *
-	 * Use this method if not having those scopes should result in an OAuth error,
-	 * i.e. as a check in {@link RequestHandler::$allowed_actions}
-	 */
-	public function requireScopes($scopes) {
-		if(!is_array($scopes)) {
-			$scopes = func_get_args();
-		}
-		return $this->authTokenService->currentTokenHasScopes($this->owner->getRequest(), $scopes, true);
-	}
+    /**
+     * Require that the OAuth request has the given scopes.
+     *
+     * Use this method if not having those scopes should result in an OAuth error,
+     * i.e. as a check in {@link RequestHandler::$allowed_actions}
+     */
+    public function requireScopes($scopes)
+    {
+        if (!is_array($scopes)) {
+            $scopes = func_get_args();
+        }
+        return $this->authTokenService->currentTokenHasScopes($this->owner->getRequest(), $scopes, true);
+    }
 
-	/**
-	 * Check if the OAuth request has the given scopes.
-	 *
-	 * Use this method if not having those scopes isn't fatal, i.e. to provide
-	 * extra functionality if those scopes are present.
-	 */
-	public function hasScopes($scopes) {
-		if(!is_array($scopes)) {
-			$scopes = func_get_args();
-		}
-		return $this->authTokenService->currentTokenHasScopes($this->owner->getRequest(), $scopes);
-	}
+    /**
+     * Check if the OAuth request has the given scopes.
+     *
+     * Use this method if not having those scopes isn't fatal, i.e. to provide
+     * extra functionality if those scopes are present.
+     */
+    public function hasScopes($scopes)
+    {
+        if (!is_array($scopes)) {
+            $scopes = func_get_args();
+        }
+        return $this->authTokenService->currentTokenHasScopes($this->owner->getRequest(), $scopes);
+    }
 
-	public function httpError($errorCode, $errorMessage = null) {
-		if(method_exists($this->authTokenService, 'httpError')) {
-			$this->authTokenService->httpError($errorCode, $errorMessage);
-		}
-	}
+    public function httpError($errorCode, $errorMessage = null)
+    {
+        if (method_exists($this->authTokenService, 'httpError')) {
+            $this->authTokenService->httpError($errorCode, $errorMessage);
+        }
+    }
 }

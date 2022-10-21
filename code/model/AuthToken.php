@@ -2,25 +2,29 @@
 
 namespace oauth\model;
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * An authentication token, linked to a particular client and member
  */
-class AuthToken extends \DataObject {
-	public static $db = array(
-		'Expires' => 'Datetime',
-		'Code' => 'Varchar(255)',
-	);
+class AuthToken extends DataObject
+{
+    private static $db = [
+        'Expires' => 'Datetime',
+        'Code' => 'Varchar(255)'
+    ];
 
-	public static $has_one = array(
-		'Client' => 'oauth\model\Client',
-		'Member' => 'Member',
-	);
+    private static $has_one = [
+        'Client' => 'oauth\model\Client',
+        'Member' => 'SilverStripe\Security\Member',
+    ];
 
-	public static $many_many = array(
-		'Scopes' => 'oauth\model\Scope',
-	);
+    private static $many_many = [
+        'Scopes' => 'oauth\model\Scope'
+    ];
 
-	public function Expired() {
-		return $this->authTokenService->tokensExpire() && $this->dbObject('Expires')->InPast();
-	}
+    public function Expired()
+    {
+        return $this->authTokenService->tokensExpire() && $this->dbObject('Expires')->InPast();
+    }
 }

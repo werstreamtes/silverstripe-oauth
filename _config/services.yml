@@ -1,6 +1,7 @@
+---
 name: Bearer
 ---
-"oauth\service\Bearer":
+oauth\service\Bearer:
   token_length:
     25
   token_life:

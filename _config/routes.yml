@@ -1,6 +1,7 @@
+---
 Name: oauthroutes
 After: framework/routes#coreroutes
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    'oauth//$Action!': 'oauth\controller\Controller',
+    "oauth//$Action!": oauth\controller\Controller
