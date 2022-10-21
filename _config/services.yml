@@ -1,0 +1,11 @@
+name: Bearer
+---
+"oauth\service\Bearer":
+  token_length:
+    25
+  token_life:
+    -1
+  allow_form_body:
+    true
+  allow_url_param:
+    false

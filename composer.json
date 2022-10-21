@@ -1,0 +1,13 @@
+{
+  "name": "werstreamtes/silverstripe-oauth",
+  "type": "silverstripe-module",
+  "authors": [
+    {
+      "name": "Johannes Hammersen",
+      "email": "johannes.hammersen@werstreamt.es"
+    }
+  ],
+  "require": {
+    "silverstripe/framework": "~3.1"
+  }
+}

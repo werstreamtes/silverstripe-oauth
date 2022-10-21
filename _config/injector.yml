@@ -1,0 +1,14 @@
+name: authtokenservice
+---
+"oauth\controller\Controller":
+  dependencies:
+    authTokenService: %$oauth\service\Service
+"oauth\model\AuthToken":
+  dependencies:
+    authTokenService: %$oauth\service\Service
+RequireOAuth:
+  dependencies:
+    authTokenService: %$oauth\service\Service
+Injector:
+  "oauth\service\Service":
+    class: "oauth\service\Bearer"
