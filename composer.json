@@ -3,8 +3,7 @@
   "type": "silverstripe-module",
   "authors": [
     {
-      "name": "Johannes Hammersen",
-      "email": "johannes.hammersen@werstreamt.es"
+      "name": "Johannes Hammersen"
     }
   ],
   "require": {
