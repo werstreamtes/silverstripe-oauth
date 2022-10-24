@@ -3,6 +3,9 @@
   "type": "silverstripe-module",
   "authors": [
     {
+      "name": "PocketRent"
+    },
+    {
       "name": "Johannes Hammersen"
     }
   ],
