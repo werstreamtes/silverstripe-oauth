@@ -1,6 +1,6 @@
 {
   "name": "werstreamtes/silverstripe-oauth",
-  "type": "silverstripe-module",
+  "type": "silverstripe-vendormodule",
   "authors": [
     {
       "name": "PocketRent"
