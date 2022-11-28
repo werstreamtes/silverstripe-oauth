@@ -37,6 +37,8 @@ class Client extends DataObject
         ]
     ];
 
+    private static $table_name = 'OAuth_Client';
+
     private static $singular_name = 'OAuth Client';
 
     public function getCMSFields()

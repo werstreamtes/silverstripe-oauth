@@ -22,6 +22,8 @@ class Scope extends DataObject
         'CantDisallow' => 'Boolean',
     ];
 
+    private static $table_name = 'OAuth_Scope';
+
     private static $singular_name = 'OAuth Scope';
 
     public function getTitle()

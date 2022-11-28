@@ -23,6 +23,8 @@ class AuthToken extends DataObject
         'Scopes' => 'oauth\model\Scope'
     ];
 
+    private static $table_name = 'OAuth_AuthToken';
+
     public function Expired()
     {
         return $this->authTokenService->tokensExpire() && $this->dbObject('Expires')->InPast();

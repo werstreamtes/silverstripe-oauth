@@ -17,6 +17,8 @@ class RedirectionURL extends DataObject
         'Client' => 'oauth\model\Client',
     ];
 
+    private static $table_name = 'OAuth_RedirectionURL';
+
     private static $singular_name = 'OAuth Client Redirection URL';
 
     public function getCMSFields()

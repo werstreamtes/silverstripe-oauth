@@ -35,6 +35,8 @@ class AuthCode extends DataObject
         ]
     ];
 
+    private static $table_name = 'OAuth_AuthCode';
+
     private static $singular_name = 'OAuth Auth Code';
 
     /**
