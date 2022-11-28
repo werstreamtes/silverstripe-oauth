@@ -352,7 +352,7 @@ class Controller extends \SilverStripe\Control\Controller
      */
     public function redirect($url, $code = 302)
     {
-        if(substr($url,0,13) != "http-x-wse://") {
+        if(substr($url,0,13) == "http-x-wse://") {
             $response = new HTTPResponse();
             $this->setResponse($response->redirect($url, $code));
         } else {
