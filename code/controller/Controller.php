@@ -341,4 +341,25 @@ class Controller extends \SilverStripe\Control\Controller
         $response->addHeader('Content-Type', 'application/json;charset=UTF-8');
         throw new HTTPResponse_Exception($response);
     }
+
+
+    /**
+     * Redirect to the given URL. Do not use Silverstripe Redirect for custom Url Schemas
+     *
+     * @param string $url
+     * @param int $code
+     * @return HTTPResponse
+     */
+    public function redirect($url, $code = 302)
+    {
+        if(substr($url,0,13) != "http-x-wse://") {
+            $response = new HTTPResponse();
+            $this->setResponse($response->redirect($url, $code));
+        } else {
+            $response = parent::redirect($url, $code);
+            $this->setResponse($response);
+        }
+        return $response;
+    }
+
 }
