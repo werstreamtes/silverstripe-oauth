@@ -4,6 +4,8 @@ namespace WSE\OAuth;
 
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 
 /**
  * Extension class that can be attached to a controller to show that that controller requires OAuth
@@ -45,7 +47,11 @@ class RequireOAuth extends Extension
         if ($this->checkOnInit) {
             try {
                 $token = $this->authTokenService->authRequest($this->owner->getRequest(), $this->scopes);
-                $token->Member()->login();
+                
+                /** @var IdentityStore $identityStore */
+                $identityStore = Injector::inst()->get(IdentityStore::class);
+                $identityStore->logIn($token->Member(), true, $this->owner->getRequest());
+
             } catch (HTTPResponse_Exception $e) {
                 $this->owner->popCurrent();
                 throw $e;

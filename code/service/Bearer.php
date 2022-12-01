@@ -8,6 +8,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\IdentityStore;
 
 class Bearer implements Service
 {
@@ -142,7 +144,11 @@ class Bearer implements Service
         if (!$this->token) {
             try {
                 $this->authRequest($request, $scopes);
-                $this->token->Member()->login();
+
+                /** @var IdentityStore $identityStore */
+                $identityStore = Injector::inst()->get(IdentityStore::class);
+                $identityStore->logIn($this->token->Member(), true, $request);
+
                 return true;
             } catch (HTTPResponse_Exception $e) {
                 if ($error) {
