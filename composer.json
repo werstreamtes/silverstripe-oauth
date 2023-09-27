@@ -10,6 +10,6 @@
     }
   ],
   "require": {
-    "silverstripe/framework": "~4.10"
+    "silverstripe/framework": ">4"
   }
 }
