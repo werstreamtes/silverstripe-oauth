@@ -337,7 +337,7 @@ class Controller extends \SilverStripe\Control\Controller
             $link = self::join_links($redirectTo, $append);
             return $this->redirect($link);
         }
-        $response = new HTTPResponse(Convert::raw2json($error), 400);
+        $response = new HTTPResponse(json_encode($error, 0), 400);
         $response->addHeader('Content-Type', 'application/json;charset=UTF-8');
         throw new HTTPResponse_Exception($response);
     }
