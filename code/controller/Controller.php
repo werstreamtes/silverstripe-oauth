@@ -350,7 +350,7 @@ class Controller extends \SilverStripe\Control\Controller
      * @param int $code
      * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, int $code = 302): HTTPResponse
     {
         if(substr($url,0,13) == "http-x-wse://") {
             $response = new HTTPResponse();
