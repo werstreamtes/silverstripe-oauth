@@ -6,12 +6,11 @@ use SilverStripe\Control\HTTPRequest as Req;
 use \oauth\model as Model;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * OAuth Controller
@@ -100,7 +99,7 @@ class Controller extends \SilverStripe\Control\Controller
         }
 
         // Either get the member to log in, or redirect straight to the run auth page.
-        $member = Member::CurrentUser();
+        $member = Security::getCurrentUser();
         if (!$member || !$member->exists()) {
             // $message = sprintf('%s would like to be authorised to use your account. <a href="%s"><button>Cancel</button></a>', $client->Name, $this->Link('cancel'));
             // $session->set('Security.Message.message', $message);
@@ -146,7 +145,7 @@ class Controller extends \SilverStripe\Control\Controller
     {
         $session = $req->getSession();
         // EMake Sure user is authenticated
-        $member = Member::CurrentUser();
+        $member = Security::getCurrentUser();
         if (!$member || !$member->exists()) {
             $session->set('BackURL', $this->Link('runauth'));
             return $this->redirect('Security/login?BackURL=' . urlencode($this->Link('runauth')));
@@ -200,7 +199,7 @@ class Controller extends \SilverStripe\Control\Controller
         $code = new Model\AuthCode;
         $code->RedirectURI = $session->get('oauth.return');
         $code->ClientID = $session->get('oauth.client');
-        $code->MemberID = Member::CurrentUserID();
+        $code->MemberID = Security::getCurrentUser()->ID;
         $code->write();
         $code->Scopes()->addMany($scope);
         return $this->redirect($code->SendEndpoint());
@@ -299,7 +298,7 @@ class Controller extends \SilverStripe\Control\Controller
         $code = new Model\AuthCode;
         $code->RedirectURI = $session->get('oauth.return');
         $code->ClientID = $session->get('oauth.client');
-        $code->MemberID = Member::CurrentUserID();
+        $code->MemberID = Security::getCurrentUser()->ID;
         $code->write();
         $form->saveInto($code);
         // Add in the requested scopes that can't be refused
