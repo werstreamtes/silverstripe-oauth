@@ -104,7 +104,8 @@ class Controller extends \SilverStripe\Control\Controller
             // $message = sprintf('%s would like to be authorised to use your account. <a href="%s"><button>Cancel</button></a>', $client->Name, $this->Link('cancel'));
             // $session->set('Security.Message.message', $message);
 
-            $BackURL = $this->Link('runauth');
+            //HACK: something is messing up the slashes when the app tries to login via Sign in with Apple, so lets add one for now:
+            $BackURL = '/' . $this->Link('runauth');
             $redirectTarget = 'Security/login';
             // Check if the User specified a preference for Sign Up or Login:
             if ($req->requestVar('signup') == 'true') {
