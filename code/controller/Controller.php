@@ -345,7 +345,13 @@ class Controller extends \SilverStripe\Control\Controller
         }
         $response = new HTTPResponse(json_encode($error, 0), 400);
         $response->addHeader('Content-Type', 'application/json;charset=UTF-8');
-        throw new HTTPResponse_Exception($response);
+
+        $response->addHeader('Access-Control-Allow-Origin', '*');
+        $response->addHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+        $response->addHeader('Access-Control-Max-Age', '1000');
+        $response->addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
+	throw new HTTPResponse_Exception($response);
     }
 
 
