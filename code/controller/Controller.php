@@ -223,13 +223,17 @@ class Controller extends \SilverStripe\Control\Controller
             return $this->oauthError('invalid_request', 'POST is required');
         }
 
+        $body = json_decode($req->getBody(), true);
+
+        $grantType = $req->postVar('grant_type') ?? $body['grant_type'] ?? null;
+
         // We only support the authorization_code grant type
-        if ($req->postVar('grant_type') != 'authorization_code') {
+        if ($grantType != 'authorization_code') {
             return $this->oauthError('unsupported_grant_type', 'grant_type must be authorization_code');
         }
 
         // Check the supplied code against issued tokens
-        $code = $req->postVar('code');
+        $code = $req->postVar('code') ?? $body['code'] ?? null;
         $token = Model\AuthCode::get()->filter('Code', $code)->First();
         if (!$token || !$token->exists()) {
             return $this->oauthError('invalid_grant', 'Access code not found.');
@@ -240,7 +244,7 @@ class Controller extends \SilverStripe\Control\Controller
         }
 
         // The redirect URI must match exactly what was provided.
-        if ($token->RedirectURI != $req->postVar('redirect_uri')) {
+        if ($token->RedirectURI != ($req->postVar('redirect_uri') ?? $body['redirect_uri'] ?? null)) {
             return $this->oauthError('invalid_grant', 'Invalid redirect URI.');
         }
 
@@ -253,6 +257,12 @@ class Controller extends \SilverStripe\Control\Controller
         // Respond with the data. Must be sent as JSON over UTF-8.
         $response = new HTTPResponse(json_encode($data), 200);
         $response->addHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        $response->addHeader('Access-Control-Allow-Origin', '*');
+        $response->addHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+        $response->addHeader('Access-Control-Max-Age', '1000');
+        $response->addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
         return $response;
     }
 
@@ -339,6 +349,12 @@ class Controller extends \SilverStripe\Control\Controller
         }
         $response = new HTTPResponse(json_encode($error, 0), 400);
         $response->addHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        $response->addHeader('Access-Control-Allow-Origin', '*');
+        $response->addHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+        $response->addHeader('Access-Control-Max-Age', '1000');
+        $response->addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
         throw new HTTPResponse_Exception($response);
     }
 
@@ -352,7 +368,7 @@ class Controller extends \SilverStripe\Control\Controller
      */
     public function redirect(string $url, int $code = 302): HTTPResponse
     {
-        if(substr($url,0,13) == "http-x-wse://") {
+        if (substr($url, 0, 13) == "http-x-wse://") {
             $response = new HTTPResponse();
             $this->setResponse($response->redirect($url, $code));
         } else {
