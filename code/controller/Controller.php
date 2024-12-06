@@ -224,7 +224,7 @@ class Controller extends \SilverStripe\Control\Controller
         }
 
         $body = json_decode($req->getBody(), true);
-print_r($body);
+
         $grantType = $req->postVar('grant_type') ?? $body['grant_type'] ?? null;
 
         // We only support the authorization_code grant type
