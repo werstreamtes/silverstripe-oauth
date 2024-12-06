@@ -235,6 +235,12 @@ class Controller extends \Controller {
 		// Respond with the data. Must be sent as JSON over UTF-8.
 		$response = new \SS_HTTPResponse(\Convert::raw2json($data), 200);
 		$response->addHeader('Content-Type', 'application/json;charset=UTF-8');
+
+	        $response->addHeader('Access-Control-Allow-Origin', '*');
+	        $response->addHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+	        $response->addHeader('Access-Control-Max-Age', '1000');
+	        $response->addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+		
 		return $response;
 	}
 
